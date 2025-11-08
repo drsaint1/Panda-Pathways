@@ -1,0 +1,100 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.log
+
+# Production
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+
+# Deployment
+deployment-info.txt
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Development and debugging files
+error.md
+use.md
+.claude
+.claude.json
+.claude.json.backup
+.claude/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Package manager lock files (optional - uncomment if you want to ignore)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Build artifacts
+*.wasm.d.ts
+.stellar/
+
+# Test coverage
+.nyc_output/
+
+# Backup files
+*.bak
+*.backup
+
+# Mac
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Linux
+.directory
+
+# Editor specific
+.project
+.classpath
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.metadata
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Misc
+*.local
+dist-ssr

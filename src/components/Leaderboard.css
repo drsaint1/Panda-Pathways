@@ -1,0 +1,84 @@
+.leaderboard-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.leaderboard-label {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 4px 0;
+}
+
+.leaderboard-header h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.leaderboard-chip {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.leaderboard-table {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+  padding: 18px 24px;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-row.header {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 11px;
+  opacity: 0.65;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.leaderboard-row .player {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+@media (max-width: 680px) {
+  .leaderboard-row {
+    grid-template-columns: 40px 1fr 1fr;
+    font-size: 14px;
+  }
+
+  .leaderboard-row span:nth-child(4),
+  .leaderboard-row span:nth-child(5) {
+    display: none;
+  }
+
+  .leaderboard-row.header {
+    grid-template-columns: 40px 1fr 1fr;
+  }
+}

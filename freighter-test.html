@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freighter Diagnostic Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            margin-top: 0;
+        }
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .warning { color: #fbbf24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Freighter Diagnostic Test</h1>
+        <p>This page will help diagnose Freighter wallet connection issues.</p>
+
+        <button onclick="checkExtension()">1. Check Extension</button>
+        <button onclick="checkImport()">2. Test Import</button>
+        <button onclick="testConnection()">3. Test Connection</button>
+        <button onclick="clearResults()">Clear</button>
+
+        <div id="results" class="result"></div>
+    </div>
+
+    <script type="module">
+        window.log = function(message, type = 'info') {
+            const results = document.getElementById('results');
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            results.innerHTML += `<div class="${className}">${message}</div>`;
+        };
+
+        window.clearResults = function() {
+            document.getElementById('results').innerHTML = '';
+        };
+
+        window.checkExtension = function() {
+            log('\n=== Checking Browser Extension ===\n');
+
+            log('Checking window object...');
+            const w = window;
+            const freighterKeys = Object.keys(w).filter(k =>
+                k.toLowerCase().includes('freighter') ||
+                k.toLowerCase().includes('stellar')
+            );
+
+            if (freighterKeys.length > 0) {
+                log('✓ Found Freighter-related properties: ' + freighterKeys.join(', '), 'success');
+
+                freighterKeys.forEach(key => {
+                    const obj = w[key];
+                    if (obj && typeof obj === 'object') {
+                        log(`  ${key} methods: ${Object.keys(obj).slice(0, 10).join(', ')}`, 'info');
+                    }
+                });
+            } else {
+                log('✗ No Freighter properties found on window object', 'error');
+            }
+
+            log('\nChecking for wallet conflicts...');
+            const wallets = ['ethereum', 'solana', 'keplr', 'phantom', 'metamask'];
+            const found = wallets.filter(w => typeof window[w] !== 'undefined');
+            if (found.length > 0) {
+                log('⚠ Found other wallet extensions: ' + found.join(', '), 'warning');
+                log('  These may conflict with Freighter!', 'warning');
+            }
+
+            log('\nExtension status:');
+            log('Open browser console (F12) and look for Freighter-related errors.', 'info');
+        };
+
+        window.checkImport = async function() {
+            log('\n=== Testing NPM Package Import ===\n');
+
+            try {
+                log('Attempting to import @stellar/freighter-api...');
+                const freighter = await import('https://cdn.skypack.dev/@stellar/freighter-api');
+                log('✓ Import successful!', 'success');
+                log('Available methods: ' + Object.keys(freighter).join(', '), 'info');
+
+                window.freighterModule = freighter;
+
+            } catch (error) {
+                log('✗ Import failed: ' + error.message, 'error');
+                log('Stack: ' + error.stack, 'error');
+            }
+        };
+
+        window.testConnection = async function() {
+            log('\n=== Testing Connection ===\n');
+
+            if (!window.freighterModule) {
+                log('Please run "Test Import" first!', 'warning');
+                return;
+            }
+
+            try {
+                const freighter = window.freighterModule;
+
+                log('Checking if Freighter is connected...');
+                const isConnected = await freighter.isConnected();
+
+                if (isConnected) {
+                    log('✓ Freighter is connected!', 'success');
+
+                    log('\nAttempting to get public key...');
+                    const publicKey = await freighter.getPublicKey();
+                    log('✓ Public Key: ' + publicKey, 'success');
+
+                } else {
+                    log('✗ Freighter is not connected', 'error');
+                    log('Please install Freighter extension from https://www.freighter.app/', 'warning');
+                }
+
+            } catch (error) {
+                log('✗ Connection test failed: ' + error.message, 'error');
+                log('Details: ' + error.toString(), 'error');
+            }
+        };
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🚀 Diagnostic tool loaded. Click buttons above to run tests.\n');
+                checkExtension();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
