@@ -28,7 +28,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
   const gameRef = useRef<Game | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const { submitScore, ownedPandaNFTs } = useWalletStore();
+  const { submitScore } = useWalletStore();
 
   const [currentScore, setCurrentScore] = useState<ScoreState | null>(null);
   const [showPrompt, setShowPrompt] = useState(true);
