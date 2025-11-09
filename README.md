@@ -18,7 +18,7 @@
 
 ## 🌟 Live Demo
 
-[Play Panda Pathways](#) *(Add your deployment URL)*
+[Play Panda Pathways](https://panda-pathways.vercel.app/)
 
 ## 📋 Table of Contents
 
@@ -36,18 +36,21 @@
 ## ✨ Features
 
 ### 🎨 NFT System
+
 - **6 Unique Panda Skins**: Bamboo Scout, Aurora Glide, Ember Dash, Golden Fur, Samurai Spirit, Festival
 - **On-Chain Metadata**: All NFT data stored on Stellar blockchain
 - **Limited Supply**: Maximum 5 NFTs per wallet
 - **Staking Mechanism**: Stake NFTs to earn future rewards
 
 ### 🎮 Gameplay
+
 - **Dynamic Difficulty**: Game speed increases as you progress
 - **Combo System**: Build combos for bonus rewards
 - **Multiple Obstacles**: Rocks, trees, and pits to avoid
 - **Score Tracking**: Persistent leaderboard on-chain
 
 ### 💰 Tokenomics
+
 - **PANDA Token**: Native reward token (7 decimals)
 - **Score-Based Rewards**: Earn tokens based on performance
 - **Combo Bonuses**: Extra tokens for maintaining combos
@@ -56,6 +59,7 @@
 ## 🛠 Technology Stack
 
 ### Frontend
+
 - **React 18.2** - UI framework
 - **TypeScript 5.3** - Type-safe development
 - **Vite 5.0** - Fast build tool
@@ -64,12 +68,14 @@
 - **Stellar Wallet Kit** - Wallet integration
 
 ### Blockchain
+
 - **Stellar Soroban** - Smart contract platform
 - **Rust** - Contract language
 - **WebAssembly** - Contract compilation target
 - **Stellar SDK 11.3** - Blockchain interaction
 
 ### Smart Contracts
+
 - **panda-token** - Fungible token contract
 - **panda-nft** - NFT minting and staking
 - **game-rewards** - Score tracking and rewards
@@ -78,15 +84,16 @@
 
 ### Deployed Contracts (Testnet)
 
-| Contract | Address | Description |
-|----------|---------|-------------|
-| **PANDA Token** | `CBQJEQG56OIADIR5DFOQQRBQXXNGAICAFP7QDXOAEC3YPHEPX5YFMJB6` | Fungible reward token |
-| **Panda NFT** | `CCOT7KDAK6YRGUR3ZJYX3POWSXA3KQSDS6PNLA64W6VKNSIEE33COCBF` | NFT minting & staking |
+| Contract         | Address                                                    | Description                |
+| ---------------- | ---------------------------------------------------------- | -------------------------- |
+| **PANDA Token**  | `CBQJEQG56OIADIR5DFOQQRBQXXNGAICAFP7QDXOAEC3YPHEPX5YFMJB6` | Fungible reward token      |
+| **Panda NFT**    | `CCOT7KDAK6YRGUR3ZJYX3POWSXA3KQSDS6PNLA64W6VKNSIEE33COCBF` | NFT minting & staking      |
 | **Game Rewards** | `CDGZ3PJ3XXERQGZTJ3SUGAVBQWXP72HHMYERGFLLZ3HSK5NMBL32SE7L` | Score submission & rewards |
 
 ### Contract Functions
 
 #### PANDA Token
+
 ```rust
 initialize(admin: Address)
 mint(to: Address, amount: i128)
@@ -95,6 +102,7 @@ balance(id: Address) -> i128
 ```
 
 #### Panda NFT
+
 ```rust
 initialize(admin: Address)
 mint_panda(player: Address, skin: String) -> u64
@@ -105,6 +113,7 @@ get_staked_pandas(player: Address) -> Vec<u64>
 ```
 
 #### Game Rewards
+
 ```rust
 initialize(admin: Address, token_address: Address, nft_address: Address)
 submit_score(player: Address, score: i128, distance: i128, combo: u32, panda_nft_id: Option<u64>) -> i128
@@ -114,23 +123,27 @@ get_player_scores(player: Address) -> Vec<GameScore>
 ## 🚀 Installation
 
 ### Prerequisites
+
 - Node.js 18+ and npm
 - Rust and Cargo
 - Stellar CLI
 - Docker (optional, for local Stellar network)
 
 ### Clone the Repository
+
 ```bash
 git clone https://github.com/yourusername/panda-pathways.git
 cd panda-pathways
 ```
 
 ### Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### Configure Environment
+
 Create a `.env` file in the root directory:
 
 ```env
@@ -149,12 +162,15 @@ DEPLOYER_ADDRESS=YOUR_DEPLOYER_ADDRESS
 ## 💻 Development
 
 ### Start Development Server
+
 ```bash
 npm run dev
 ```
+
 The app will be available at `http://localhost:5173`
 
 ### Build Contracts
+
 ```bash
 # Build all contracts
 cd contracts/panda-token
@@ -168,6 +184,7 @@ stellar contract build
 ```
 
 ### Deploy Contracts
+
 ```bash
 # Deploy panda-token
 stellar contract deploy \
@@ -184,19 +201,21 @@ stellar contract invoke \
 ```
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
+
 Production files will be in the `dist/` directory.
 
 ## 🎮 Game Controls
 
-| Key | Action |
-|-----|--------|
-| **← / A** | Move Left |
-| **→ / D** | Move Right |
-| **Space / W** | Jump |
-| **Shift / S** | Crouch |
+| Key           | Action     |
+| ------------- | ---------- |
+| **← / A**     | Move Left  |
+| **→ / D**     | Move Right |
+| **Space / W** | Jump       |
+| **Shift / S** | Crouch     |
 
 ## 🏗 Architecture
 
