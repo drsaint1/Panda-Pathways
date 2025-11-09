@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import * as StellarSdk from '@stellar/stellar-sdk';
 import {
   StellarWalletsKit,
@@ -50,22 +49,19 @@ export interface WalletState {
   mintPandaNFT: (skin: string) => Promise<number>;
   stakePandaNFT: (pandaId: number) => Promise<string>;
   unstakePandaNFT: (pandaId: number) => Promise<string>;
-  autoReconnect: () => Promise<void>;
 }
 
-const useWalletStore = create<WalletState>()(
-  persist(
-    (set, get) => ({
-      isConnected: false,
-      publicKey: null,
-      network: STELLAR_CONFIG.NETWORK,
-      balance: '0',
-      pandaTokenBalance: '0',
-      ownedPandaNFTs: [],
-      selectedWalletId: null,
-      stakedPandaNFTs: [],
+const useWalletStore = create<WalletState>((set, get) => ({
+  isConnected: false,
+  publicKey: null,
+  network: STELLAR_CONFIG.NETWORK,
+  balance: '0',
+  pandaTokenBalance: '0',
+  ownedPandaNFTs: [],
+  selectedWalletId: null,
+  stakedPandaNFTs: [],
 
-      connect: async () => {
+  connect: async () => {
     try {
       console.log('Opening Stellar Wallet Kit modal...');
 
@@ -169,43 +165,6 @@ const useWalletStore = create<WalletState>()(
       ownedPandaNFTs: [],
       selectedWalletId: null,
     });
-  },
-
-  autoReconnect: async () => {
-    const { publicKey, selectedWalletId, isConnected } = get();
-
-    // If already connected or no saved data, skip
-    if (isConnected || !publicKey || !selectedWalletId) {
-      return;
-    }
-
-    try {
-      console.log('Attempting to restore wallet connection...');
-
-      const kit = getWalletKit();
-      kit.setWallet(selectedWalletId);
-
-      // Try to get the current address from the wallet
-      const { address } = await kit.getAddress();
-
-      // Verify it matches the saved address
-      if (address === publicKey) {
-        console.log('✓ Wallet connection restored:', `${address.substring(0, 8)}...`);
-
-        set({ isConnected: true });
-
-        // Refresh balances and NFTs
-        get().fetchBalances().catch(console.error);
-        get().fetchPandaNFTs().catch(console.error);
-      } else {
-        console.warn('Wallet address mismatch, clearing saved connection');
-        get().disconnect();
-      }
-    } catch (error) {
-      console.warn('Auto-reconnect failed:', error);
-      // Don't disconnect here, keep the data for manual reconnection
-      set({ isConnected: false });
-    }
   },
 
   fetchBalances: async () => {
@@ -357,10 +316,8 @@ const useWalletStore = create<WalletState>()(
   },
 
   submitScore: async (score: number, distance: number, combo: number, nftId?: number) => {
-    const { publicKey, isConnected } = get();
-    if (!publicKey || !isConnected) {
-      throw new Error('Wallet not connected. Please connect your wallet (Freighter) and try again.');
-    }
+    const { publicKey } = get();
+    if (!publicKey) throw new Error('Wallet not connected');
 
     try {
       console.log('Submitting score to blockchain:', { score, distance, combo, nftId });
@@ -481,10 +438,8 @@ const useWalletStore = create<WalletState>()(
   },
 
   mintPandaNFT: async (skin: string) => {
-    const { publicKey, isConnected } = get();
-    if (!publicKey || !isConnected) {
-      throw new Error('Wallet not connected. Please connect your wallet (Freighter) and try again.');
-    }
+    const { publicKey } = get();
+    if (!publicKey) throw new Error('Wallet not connected');
 
     try {
       console.log('Minting Panda NFT with skin:', skin);
@@ -584,10 +539,10 @@ const useWalletStore = create<WalletState>()(
   },
 
   stakePandaNFT: async (pandaId: number) => {
-    const { publicKey, ownedPandaNFTs, stakedPandaNFTs, selectedWalletId, isConnected } = get();
+    const { publicKey, ownedPandaNFTs, stakedPandaNFTs, selectedWalletId } = get();
 
-    if (!publicKey || !isConnected) {
-      throw new Error('Wallet not connected. Please connect your wallet (Freighter) and try again.');
+    if (!publicKey) {
+      throw new Error('Wallet not connected');
     }
 
     if (!ownedPandaNFTs.includes(pandaId)) {
@@ -650,10 +605,10 @@ const useWalletStore = create<WalletState>()(
   },
 
   unstakePandaNFT: async (pandaId: number) => {
-    const { publicKey, stakedPandaNFTs, selectedWalletId, isConnected } = get();
+    const { publicKey, stakedPandaNFTs, selectedWalletId } = get();
 
-    if (!publicKey || !isConnected) {
-      throw new Error('Wallet not connected. Please connect your wallet (Freighter) and try again.');
+    if (!publicKey) {
+      throw new Error('Wallet not connected');
     }
 
     if (!stakedPandaNFTs.includes(pandaId)) {
@@ -710,18 +665,6 @@ const useWalletStore = create<WalletState>()(
       throw new Error(`Failed to unstake Panda: ${error.message}`);
     }
   },
-    }),
-    {
-      name: 'panda-wallet-storage',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        publicKey: state.publicKey,
-        selectedWalletId: state.selectedWalletId,
-        // Don't persist isConnected - will be set by autoReconnect
-        // Don't persist balances and NFTs - will be fetched on reconnect
-      }),
-    }
-  )
-);
+}));
 
 export default useWalletStore;

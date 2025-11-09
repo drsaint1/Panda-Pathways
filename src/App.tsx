@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useWalletStore from './store/walletStore';
 import WalletConnect from './components/WalletConnect';
 import PandaNFTMint from './components/PandaNFTMint';
@@ -9,16 +9,11 @@ import PandaSelector from './components/PandaSelector';
 import './App.css';
 
 function App() {
-  const { isConnected, pandaTokenBalance, ownedPandaNFTs, autoReconnect } = useWalletStore();
+  const { isConnected, pandaTokenBalance, ownedPandaNFTs } = useWalletStore();
   const [showMintModal, setShowMintModal] = useState(false);
   const [selectedPandaNFT, setSelectedPandaNFT] = useState<number | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [activeSection, setActiveSection] = useState<'play' | 'stake' | 'leaderboard'>('play');
-
-  // Auto-reconnect wallet on app load
-  useEffect(() => {
-    autoReconnect();
-  }, [autoReconnect]);
 
   const handleStartGame = () => {
     if (!isConnected) {
