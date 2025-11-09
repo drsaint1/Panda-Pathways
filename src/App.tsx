@@ -74,6 +74,14 @@ function App() {
                   {tab.label}
                 </button>
               ))}
+              {isConnected && ownedPandaNFTs.length < 5 && (
+                <button
+                  className="nav-button mint-button"
+                  onClick={() => setShowMintModal(true)}
+                >
+                  🎨 Mint NFT
+                </button>
+              )}
             </nav>
           </div>
           <div className="header-right">

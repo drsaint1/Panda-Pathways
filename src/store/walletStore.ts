@@ -32,6 +32,13 @@ function getWalletKit(): StellarWalletsKit {
   return walletKit;
 }
 
+export interface LeaderboardEntry {
+  player: string;
+  highScore: number;
+  totalEarned: number;
+  gamesPlayed: number;
+}
+
 export interface WalletState {
   isConnected: boolean;
   publicKey: string | null;
@@ -45,6 +52,7 @@ export interface WalletState {
   disconnect: () => void;
   fetchBalances: () => Promise<void>;
   fetchPandaNFTs: () => Promise<void>;
+  fetchLeaderboard: () => Promise<LeaderboardEntry[]>;
   submitScore: (score: number, distance: number, combo: number, nftId?: number) => Promise<string>;
   mintPandaNFT: (skin: string) => Promise<number>;
   stakePandaNFT: (pandaId: number) => Promise<string>;
@@ -312,6 +320,82 @@ const useWalletStore = create<WalletState>((set, get) => ({
     } catch (error) {
       console.error('Failed to fetch Panda NFTs:', error);
       set({ ownedPandaNFTs: [], stakedPandaNFTs: [] });
+    }
+  },
+
+  fetchLeaderboard: async () => {
+    try {
+      const server = getSorobanServer();
+      const contract = new StellarSdk.Contract(STELLAR_CONFIG.CONTRACTS.GAME_REWARDS);
+
+      // Create a dummy account for simulation (no auth needed for read-only calls)
+      const dummyAccount = new StellarSdk.Account(
+        'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF',
+        '0'
+      );
+
+      const operation = contract.call('get_leaderboard');
+
+      const transaction = new StellarSdk.TransactionBuilder(dummyAccount, {
+        fee: StellarSdk.BASE_FEE,
+        networkPassphrase: STELLAR_CONFIG.NETWORK_PASSPHRASE,
+      })
+        .addOperation(operation)
+        .setTimeout(30)
+        .build();
+
+      const simulated = await server.simulateTransaction(transaction);
+
+      console.log('Leaderboard simulation result:', simulated);
+
+      if (!StellarSdk.SorobanRpc.Api.isSimulationSuccess(simulated)) {
+        console.warn('Leaderboard simulation failed. Details:', simulated);
+
+        // Check if it's an error with more details
+        if ('error' in simulated) {
+          console.error('Simulation error:', simulated.error);
+        }
+
+        if ('events' in simulated) {
+          console.log('Simulation events:', simulated.events);
+        }
+
+        // Return empty array - contract might not have leaderboard data yet
+        return [];
+      }
+
+      const result = simulated.result?.retval;
+      if (!result) {
+        console.log('No result from leaderboard query');
+        return [];
+      }
+
+      // Parse leaderboard data
+      const leaderboardData = StellarSdk.scValToNative(result);
+      console.log('Raw leaderboard data:', leaderboardData);
+
+      if (!Array.isArray(leaderboardData)) {
+        console.warn('Leaderboard data is not an array:', typeof leaderboardData, leaderboardData);
+        return [];
+      }
+
+      const leaderboard: LeaderboardEntry[] = leaderboardData.map((entry: any) => ({
+        player: entry.player || 'Unknown',
+        highScore: Number(entry.high_score || entry.highScore || 0),
+        totalEarned: Number(entry.total_earned || entry.totalEarned || 0) / 10_000_000, // Convert from stroops
+        gamesPlayed: Number(entry.games_played || entry.gamesPlayed || 0),
+      }));
+
+      console.log('✅ Leaderboard fetched successfully:', leaderboard);
+      return leaderboard;
+    } catch (error: any) {
+      console.error('Failed to fetch leaderboard:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      return [];
     }
   },
 
