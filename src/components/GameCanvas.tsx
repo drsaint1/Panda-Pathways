@@ -14,13 +14,15 @@ interface Notification {
 interface GameCanvasProps {
   selectedPandaNFT: number | null;
   gameStarted: boolean;
-  onStartGame: (nftId?: number) => void;
+  onPlayAgain: () => void;
+  onChangePanda: () => void;
 }
 
 const GameCanvas: React.FC<GameCanvasProps> = ({
   selectedPandaNFT,
   gameStarted,
-  onStartGame
+  onPlayAgain,
+  onChangePanda
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<Game | null>(null);
@@ -80,13 +82,14 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     }
   }, [gameStarted]);
 
-  const handleStartClick = () => {
-    if (ownedPandaNFTs.length === 0) {
-      alert('Please mint a Panda NFT first!');
-      return;
-    }
+  const handlePlayAgainClick = () => {
     setScoreSaved(false);
-    onStartGame(selectedPandaNFT || ownedPandaNFTs[0]);
+    onPlayAgain();
+  };
+
+  const handleChangePandaClick = () => {
+    setScoreSaved(false);
+    onChangePanda();
   };
 
   const handleSaveScore = async () => {
@@ -176,9 +179,9 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
           </div>
         )}
 
-        {!showPrompt && (
+        {!showPrompt && selectedPandaNFT !== null && (
           <div className="skin-indicator">
-            <div className="indicator-header">Active Panda</div>
+            <div className="indicator-header">Playing as Panda #{selectedPandaNFT}</div>
             <div className="indicator-name">{currentSkin.charAt(0).toUpperCase() + currentSkin.slice(1)}</div>
             <div className="indicator-swatches">
               <span className="swatch" style={{ backgroundColor: toHex(palette.base) }} title="Body" />
@@ -197,6 +200,13 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
                   Sprint through bamboo wilds, dodge obstacles, and earn PANDA tokens!
                 </p>
 
+                {selectedPandaNFT !== null && (
+                  <div className="selected-panda-info">
+                    <span className="panda-label">Playing with:</span>
+                    <span className="panda-name">Panda #{selectedPandaNFT}</span>
+                  </div>
+                )}
+
                 <div className="controls-info">
                   <h4>Controls:</h4>
                   <div className="control-list">
@@ -212,8 +222,8 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
                   </div>
                 </div>
 
-                <button className="start-button" onClick={handleStartClick}>
-                  Start Run
+                <button className="start-button" onClick={handlePlayAgainClick}>
+                  🎮 Start Run
                 </button>
               </>
             ) : (
@@ -284,10 +294,18 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
 
                   <button
                     className="start-button secondary"
-                    onClick={handleStartClick}
+                    onClick={handlePlayAgainClick}
                     disabled={isSubmitting}
                   >
                     🎮 Play Again
+                  </button>
+
+                  <button
+                    className="start-button tertiary"
+                    onClick={handleChangePandaClick}
+                    disabled={isSubmitting}
+                  >
+                    🔄 Change Panda
                   </button>
                 </div>
               </>

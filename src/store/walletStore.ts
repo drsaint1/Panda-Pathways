@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import * as StellarSdk from '@stellar/stellar-sdk';
 import {
   StellarWalletsKit,

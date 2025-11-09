@@ -5,6 +5,7 @@ import PandaNFTMint from './components/PandaNFTMint';
 import GameCanvas from './components/GameCanvas';
 import PandaStake from './components/PandaStake';
 import Leaderboard from './components/Leaderboard';
+import PandaSelector from './components/PandaSelector';
 import './App.css';
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [activeSection, setActiveSection] = useState<'play' | 'stake' | 'leaderboard'>('play');
 
-  const handleStartGame = (nftId?: number) => {
+  const handleStartGame = () => {
     if (!isConnected) {
       alert('Please connect your wallet first!');
       return;
@@ -26,8 +27,27 @@ function App() {
       return;
     }
 
-    setSelectedPandaNFT(nftId || ownedPandaNFTs[0]);
+    if (!selectedPandaNFT) {
+      alert('Please select a Panda NFT first!');
+      return;
+    }
+
     setGameStarted(true);
+  };
+
+  const handleSelectPanda = (pandaId: number) => {
+    setSelectedPandaNFT(pandaId);
+  };
+
+  const handleChangePanda = () => {
+    setSelectedPandaNFT(null);
+    setGameStarted(false);
+  };
+
+  const handlePlayAgain = () => {
+    // Just restart the game with the same panda
+    setGameStarted(false);
+    setTimeout(() => setGameStarted(true), 100);
   };
 
   return (
@@ -124,16 +144,29 @@ function App() {
                   </button>
                 </div>
               </div>
+            ) : !selectedPandaNFT ? (
+              <PandaSelector
+                selectedPandaId={selectedPandaNFT}
+                onSelectPanda={handleSelectPanda}
+                onStartGame={handleStartGame}
+              />
             ) : (
               <GameCanvas
                 selectedPandaNFT={selectedPandaNFT}
                 gameStarted={gameStarted}
-                onStartGame={handleStartGame}
+                onPlayAgain={handlePlayAgain}
+                onChangePanda={handleChangePanda}
               />
             )}
 
-            {!gameStarted && isConnected && ownedPandaNFTs.length > 0 && (
+            {!gameStarted && isConnected && ownedPandaNFTs.length > 0 && selectedPandaNFT && (
               <div className="quick-actions">
+                <button
+                  className="action-button"
+                  onClick={handleChangePanda}
+                >
+                  🔄 Change Selected Panda
+                </button>
                 <button
                   className="action-button"
                   onClick={() => setShowMintModal(true)}
@@ -141,7 +174,7 @@ function App() {
                 >
                   {ownedPandaNFTs.length >= 5
                     ? 'Max Pandas Minted'
-                    : 'Mint Another Panda'}
+                    : '➕ Mint Another Panda'}
                 </button>
               </div>
             )}

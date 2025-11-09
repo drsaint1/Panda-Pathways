@@ -134,6 +134,29 @@
   line-height: 1.6;
 }
 
+.selected-panda-info {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+  border: 2px solid rgba(16, 185, 129, 0.5);
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.panda-label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.panda-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #10b981;
+}
+
 .controls-info {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
@@ -223,6 +246,15 @@ kbd {
   background: rgba(255, 255, 255, 0.15);
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: none;
+}
+
+.start-button.tertiary {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.start-button.tertiary:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
 }
 
 .score-summary {

@@ -1,0 +1,273 @@
+.panda-selector-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.panda-selector-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.selector-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.selector-description {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.pandas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.panda-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15));
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.panda-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.panda-card.selected {
+  border-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3));
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.panda-card.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), transparent);
+  pointer-events: none;
+}
+
+.panda-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.panda-id {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.selected-badge {
+  background: #10b981;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.panda-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.panda-emoji {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.panda-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.panda-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.panda-status.available {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.staked-info {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.staked-info p {
+  color: #fbbf24;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.staked-info strong {
+  color: #fcd34d;
+}
+
+.selector-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.start-game-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.start-game-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.start-game-button:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.no-pandas-message {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px dashed rgba(239, 68, 68, 0.3);
+  border-radius: 16px;
+  margin: 2rem 0;
+}
+
+.message-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.no-pandas-message h3 {
+  font-size: 1.8rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.no-pandas-message p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.no-pandas-message .help-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.no-pandas-message strong {
+  color: #10b981;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .panda-selector-container {
+    padding: 1rem;
+  }
+
+  .panda-selector-content {
+    padding: 1.5rem;
+  }
+
+  .selector-title {
+    font-size: 2rem;
+  }
+
+  .pandas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .panda-card {
+    padding: 1rem;
+  }
+
+  .panda-emoji {
+    font-size: 3rem;
+  }
+
+  .start-game-button {
+    padding: 0.875rem 2rem;
+    font-size: 1.1rem;
+  }
+}
